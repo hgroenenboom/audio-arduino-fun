@@ -1,28 +1,18 @@
-struct Note
-{
-  float midi;
-  float duration;
-  bool rest;
-};
+#include "conversion.h"
+#include "midinote.h"
 
-const Note notes[]
+const MidiNote notes[]
 {
-  { 24, 0.125f, false },
-  { 0, 0.125f, true },
+  { 24, 0.0625f, false },
+  { 0, 0.0625f, true },
   { 36, 0.125f, false },
-  { 0, 0.125f, true }
+  { 0, 0.25f, true },
+  { 24, 0.0625f, false },
+  { 0, 0.0625f, true },
+  { 39, 0.125f, false },
+  { 0, 1.125f, true }
 };
-const auto notesSize = sizeof(notes) / sizeof(Note);
-
-constexpr float multiplierFromBpm(float bpm)
-{
-  return 1000.0f * (60.0f / bpm);
-};
-
-constexpr float mtof(float midi)
-{
-  return 440.0f * pow(2.0f, 0.08333333333f * (midi - 69.0f));
-}
+const auto notesSize = sizeof(notes) / sizeof(MidiNote);
 
 void loopNotes(int numTimes, float speedMultiplier)
 {
@@ -41,7 +31,7 @@ void loopNotes(int numTimes, float speedMultiplier)
       }
       else
       {    
-        tone(pin, mtof(note.midi), noteDuration);
+        tone(pin, note.frequency, noteDuration);
       }
 
       delay(noteDuration);  
