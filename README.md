@@ -20,3 +20,9 @@ Arduino uses its own GCC compiler version called `avr-gcc`. Arduino has very lim
     initiating the serial output with a given rate, this rate should match in Arduino IDEs serial monitor
 - `Serial.print()` and `Serial.println()`
     printing messages, `Serial.begin()` has to be invoked first
+
+### Audio
+- using buildin `tone` methods
+- bad performance: using a software timer library
+- high performance: using interupts and a hardware timer
+- using audiofile player libraries
