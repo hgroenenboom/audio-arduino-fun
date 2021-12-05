@@ -3,6 +3,8 @@
 ### Initial setup, to get started
 Speaker: Adafruit thin plastic speaker 8 ohm (P1891B)
 
+![](./media/schematic.png)
+
 https://www.arduino.cc/en/Tutorial/BuiltInExamples/toneMelody
 
 ### Arduino and C++
