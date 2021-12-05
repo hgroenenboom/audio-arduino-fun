@@ -1,5 +1,5 @@
-#include "conversion.h"
-#include "midinote.h"
+#include "include/conversion.h"
+#include "include/midinote.h"
 
 const MidiNote notes[]
 {
@@ -16,7 +16,7 @@ const auto notesSize = sizeof(notes) / sizeof(MidiNote);
 
 void loopNotes(int numTimes, float speedMultiplier)
 {
-  constexpr auto pin = 8;
+  static const auto pin = 8;
   
   for(auto j = 0; j < numTimes; j++)
   {
@@ -38,6 +38,8 @@ void loopNotes(int numTimes, float speedMultiplier)
     }
   }
 }
+
+const int samplesPerBlock = 1024; 
 
 void setup() 
 {
