@@ -1,73 +1,30 @@
 #include "include/conversion.h"
 #include "include/midinote.h"
 
-#include <arduino-timer.h>
+#define USE_TIMER_2     true
+#include <TimerInterrupt.h>
 
-const MidiNote notes[]
+// Optimal samplerate for single sample processing, with a little headroom
+static const long sampleRate = 5000;
+
+constexpr float incrementFromFrequency(float frequency)
 {
-  { 24, 0.0625f, false },
-  { 0, 0.0625f, true },
-  { 36, 0.125f, false },
-  { 0, 0.25f, true },
-  { 24, 0.0625f, false },
-  { 0, 0.0625f, true },
-  { 39, 0.125f, false },
-  { 0, 1.125f, true }
-};
-const auto notesSize = sizeof(notes) / sizeof(MidiNote);
-
-void loopNotes(int numTimes, float speedMultiplier)
-{
-  static const auto pin = 8;
-  
-  for(auto j = 0; j < numTimes; j++)
-  {
-    for (auto i = 0; i < notesSize; i++) 
-    {
-      const auto& note = notes[i];
-      const auto noteDuration = speedMultiplier * note.duration;
-        
-      if(note.rest)
-      {
-        noTone(pin);  
-      }
-      else
-      {    
-        tone(pin, note.frequency, noteDuration);
-      }
-
-      delay(noteDuration);  
-    }
-  }
+  return 1.0f / (static_cast<float>(sampleRate) / frequency);
 }
 
-static const int sampleRate = 1000;
-Timer<50, micros> audioTimer;
-
-float phaseIncrement(float frequency)
-{
-  return static_cast<float>(sampleRate) / frequency;
-}
-
+float phaseIncrement = incrementFromFrequency(200.0f);
 float phase = 0.0f;
-inline float processAudio(float dither)
+inline bool processAudio()
 {
-  static const auto ditherAmount = 0.05f;
-
-  phase += phaseIncrement(100.0f);
+  phase += phaseIncrement;
+  phase -= floor(phase);
   
-  return sin(phase) + ditherAmount * dither;
+  return phase > 0.5f;
 }
 
-bool processTimer(void*)
+void TimerHandler(void)
 {
-  const float dither = -0.5f + 0.001f * static_cast<float>(random(1000));
-  
-  const float output = processAudio(dither);
-  
-  digitalWrite(8, (output > 0.0) ? HIGH : LOW);
-    
-  return true;
+  digitalWrite(8, processAudio() ? HIGH : LOW);
 }
 
 void setup() 
@@ -79,10 +36,13 @@ void setup()
 
   pinMode(8, OUTPUT);
 
-  audioTimer.every(1000000 / sampleRate, processTimer);
+  ITimer2.init();
+  if (ITimer2.attachInterrupt(static_cast<float>(sampleRate), TimerHandler))
+  {
+    Serial.print(F("Starting  ITimer2 OK, millis() = ")); Serial.println(millis());
+  }
 }
 
 void loop() 
 {
-  audioTimer.tick();
 }
