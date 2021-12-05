@@ -7,17 +7,22 @@ struct Note
 
 const Note notes[]
 {
-  { 50, 0.125f, false },
+  { 24, 0.125f, false },
   { 0, 0.125f, true },
-  { 200, 0.125f, false },
+  { 36, 0.125f, false },
   { 0, 0.125f, true }
 };
-const auto numNotes = sizeof(notes) / sizeof(Note);
+const auto notesSize = sizeof(notes) / sizeof(Note);
 
 constexpr float multiplierFromBpm(float bpm)
 {
   return 1000.0f * (60.0f / bpm);
 };
+
+constexpr float mtof(float midi)
+{
+  return 440.0f * pow(2.0f, 0.08333333333f * (midi - 69.0f));
+}
 
 void loopNotes(int numTimes, float speedMultiplier)
 {
@@ -25,7 +30,7 @@ void loopNotes(int numTimes, float speedMultiplier)
   
   for(auto j = 0; j < numTimes; j++)
   {
-    for (auto i = 0; i < numNotes; i++) 
+    for (auto i = 0; i < notesSize; i++) 
     {
       const auto& note = notes[i];
       const auto noteDuration = speedMultiplier * note.duration;
@@ -36,7 +41,7 @@ void loopNotes(int numTimes, float speedMultiplier)
       }
       else
       {    
-        tone(pin, note.midi, noteDuration);
+        tone(pin, mtof(note.midi), noteDuration);
       }
 
       delay(noteDuration);  
