@@ -2,7 +2,7 @@
 
 constexpr float multiplierFromBpm(float bpm)
 {
-  return 1000.0f * (60.0f / bpm);
+  return (60.0f / bpm);
 };
 
 constexpr float mtof(float midi)
