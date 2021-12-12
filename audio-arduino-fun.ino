@@ -11,8 +11,7 @@
 
 void setup() 
 {
-  // Setup serial stream, as slow as possible
-  Serial.begin(300);
+  Serial.begin(9600);
   while(!Serial) { delay(100); }
   
   Serial.println("started");

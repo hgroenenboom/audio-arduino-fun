@@ -46,10 +46,11 @@ static const auto notesSize = sizeof(notes) / sizeof(MidiNote);
 // -----------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------
 
+constexpr 
+float speedMultiplier = multiplierFromBpm(60.0f);
+
 void loopNotes()
-{
-  constexpr float speedMultiplier = 1000.0f * multiplierFromBpm(60.0f);
-  
+{ 
   for (const auto& note : notes)
   {
     if (note.rest)
@@ -65,9 +66,6 @@ void loopNotes()
     delay(speedMultiplier * note.duration);
   }
 }
-
-constexpr 
-float speedMultiplier = multiplierFromBpm(60.0f);
 
 void processNotes()
 {

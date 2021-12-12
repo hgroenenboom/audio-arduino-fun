@@ -1,4 +1,4 @@
-#if ARDUINO_ARCH_SAMD
+#if ARDUINO_ARCH_SAMD && ARDUINO_SAMD_MKRVIDOR4000
 
 // Expected samplerate that the processor will execute the loop with 
 // TODO: more accurate would be using timers
@@ -13,6 +13,8 @@ constexpr auto targetPort = PORT_PA02;
 
 void callInSetup()
 {
+  Serial.println("Arduino MKR Vidor 4000");
+  
   pinMode(A0, OUTPUT);
   analogWriteResolution(10);
   analogWrite(A0, range);
